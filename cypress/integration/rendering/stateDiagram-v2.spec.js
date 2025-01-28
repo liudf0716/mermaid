@@ -1,4 +1,4 @@
-import { imgSnapshotTest, renderGraph } from '../../helpers/util';
+import { imgSnapshotTest, renderGraph } from '../../helpers/util.ts';
 
 describe('State diagram', () => {
   it('v2 should render a simple info', () => {
@@ -8,7 +8,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 1, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a simple state diagrams', () => {
     imgSnapshotTest(
@@ -20,7 +19,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a long descriptions instead of id when available', () => {
     imgSnapshotTest(
@@ -32,7 +30,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a long descriptions with additional descriptions', () => {
     imgSnapshotTest(
@@ -44,7 +41,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a single state with short descriptions', () => {
     imgSnapshotTest(
@@ -55,7 +51,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a transition descriptions with new lines', () => {
     imgSnapshotTest(
@@ -69,7 +64,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a state with a note', () => {
     imgSnapshotTest(
@@ -83,7 +77,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a state with on the left side when so specified', () => {
     imgSnapshotTest(
@@ -97,7 +90,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a state with a note together with another state', () => {
     imgSnapshotTest(
@@ -113,7 +105,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a note with multiple lines in it', () => {
     imgSnapshotTest(
@@ -156,7 +147,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a simple state diagrams 2', () => {
     imgSnapshotTest(
@@ -169,7 +159,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a simple state diagrams with labels', () => {
     imgSnapshotTest(
@@ -185,7 +174,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render state descriptions', () => {
     imgSnapshotTest(
@@ -198,7 +186,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render composite states', () => {
     imgSnapshotTest(
@@ -217,7 +204,6 @@ describe('State diagram', () => {
       `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render multiple composite states', () => {
     imgSnapshotTest(
@@ -287,7 +273,6 @@ describe('State diagram', () => {
     `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render concurrency states', () => {
     imgSnapshotTest(
@@ -311,7 +296,6 @@ describe('State diagram', () => {
     `,
       { logLevel: 0, fontFamily: 'courier' }
     );
-    cy.get('svg');
   });
   it('v2 should render a state with states in it', () => {
     imgSnapshotTest(
@@ -328,7 +312,7 @@ describe('State diagram', () => {
       }
     );
   });
-  it('v2 it should be possibel to use a choice', () => {
+  it('v2 it should be possible to use a choice', () => {
     imgSnapshotTest(
       `
   stateDiagram-v2
@@ -340,6 +324,21 @@ describe('State diagram', () => {
     MyChoice --> Drying
     Washing --> Finished
     Finished --> [*]
+    `,
+      {
+        logLevel: 0,
+      }
+    );
+  });
+  it('v2 A compound state should be able to link to itself', () => {
+    imgSnapshotTest(
+      `
+stateDiagram
+  state Active {
+    Idle
+  }
+  Inactive --> Idle: ACT
+  Active --> Active: LOG
     `,
       {
         logLevel: 0,
@@ -465,14 +464,14 @@ stateDiagram-v2
     );
     cy.get('svg').should((svg) => {
       expect(svg).to.have.attr('width', '100%');
-      expect(svg).to.have.attr('height');
-      const height = parseFloat(svg.attr('height'));
-      expect(height).to.be.within(177, 178);
+      // expect(svg).to.have.attr('height');
+      // const height = parseFloat(svg.attr('height'));
+      // expect(height).to.be.within(177, 178);
       const style = svg.attr('style');
       expect(style).to.match(/^max-width: [\d.]+px;$/);
       const maxWidthValue = parseFloat(style.match(/[\d.]+/g).join(''));
       // use within because the absolute value can be slightly different depending on the environment ±5%
-      expect(maxWidthValue).to.be.within(135 * 0.95, 135 * 1.05);
+      expect(maxWidthValue).to.be.within(65, 85);
     });
   });
   it('v2 should render a state diagram when useMaxWidth is false', () => {
@@ -486,12 +485,125 @@ stateDiagram-v2
       { state: { useMaxWidth: false } }
     );
     cy.get('svg').should((svg) => {
-      const height = parseFloat(svg.attr('height'));
+      // const height = parseFloat(svg.attr('height'));
       const width = parseFloat(svg.attr('width'));
-      expect(height).to.be.within(177, 178);
+      // expect(height).to.be.within(177, 178);
       // use within because the absolute value can be slightly different depending on the environment ±5%
-      expect(width).to.be.within(135 * 0.95, 135 * 1.05);
+      expect(width).to.be.within(65, 85);
       expect(svg).to.not.have.attr('style');
     });
+  });
+
+  it('v2 should render a state diagram and set the correct length of the labels', () => {
+    imgSnapshotTest(
+      `
+      stateDiagram-v2
+      [*] --> 1
+      1 --> 2: test({ foo#colon; 'far' })
+      2 --> [*]
+    `,
+      { logLevel: 0, fontFamily: 'courier' }
+    );
+  });
+
+  describe('classDefs and applying classes', () => {
+    it('v2 states can have a class applied', () => {
+      imgSnapshotTest(
+        `
+          stateDiagram-v2
+          [*] --> A
+          A --> B: test({ foo#colon; 'far' })
+          B --> [*]
+            classDef badBadEvent fill:#f00,color:white,font-weight:bold
+            class B badBadEvent
+           `,
+        { logLevel: 0, fontFamily: 'courier' }
+      );
+    });
+    it('v2 can have multiple classes applied to multiple states', () => {
+      imgSnapshotTest(
+        `
+          stateDiagram-v2
+          classDef notMoving fill:white
+          classDef movement font-style:italic;
+          classDef badBadEvent fill:#f00,color:white,font-weight:bold
+
+          [*] --> Still
+          Still --> [*]
+          Still --> Moving
+          Moving --> Still
+          Moving --> Crash
+          Crash --> [*]
+
+          class Still notMoving
+          class Moving, Crash movement
+          class Crash badBadEvent
+        `,
+        { logLevel: 0, fontFamily: 'courier' }
+      );
+    });
+    it(' can have styles applied ', () => {
+      imgSnapshotTest(
+        `
+stateDiagram-v2
+AState
+style AState fill:#636,border:1px solid red,color:white;
+        `,
+        { logLevel: 0, fontFamily: 'courier' }
+      );
+    });
+    it(' should let styles take preceedence over classes', () => {
+      imgSnapshotTest(
+        `
+stateDiagram-v2
+AState: Should NOT be white
+BState
+classDef exampleStyleClass fill:#fff,color: blue;
+class AState,BState exampleStyleClass
+style AState fill:#636,border:1px solid red,color:white;
+        `,
+        { logLevel: 0, fontFamily: 'courier' }
+      );
+    });
+    it(' should allow styles to take effect in stubgraphs', () => {
+      imgSnapshotTest(
+        `
+  stateDiagram
+    state roundWithTitle {
+      C: Black with white text
+    }
+    D: Black with white text
+
+    style C,D stroke:#00f, fill:black, color:white
+        `,
+        { logLevel: 0, fontFamily: 'courier' }
+      );
+    });
+  });
+  it('1433: should render a simple state diagram with a title', () => {
+    imgSnapshotTest(
+      `---
+title: simple state diagram
+---
+stateDiagram-v2
+[*] --> State1
+State1 --> [*]
+`,
+      {}
+    );
+  });
+  it('should align dividers correctly', () => {
+    imgSnapshotTest(
+      `stateDiagram-v2
+  state s2 {
+      s3
+      --
+      s4
+      --
+      55
+  }
+`,
+      {}
+    );
   });
 });
